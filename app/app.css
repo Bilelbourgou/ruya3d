@@ -596,4 +596,48 @@
             @apply text-sm text-zinc-500;
         }
     }
+
+    /* ── Skeleton loader ── */
+    @keyframes shimmer {
+        0%   { background-position: -400px 0; }
+        100% { background-position: 400px 0; }
+    }
+
+    .skeleton-box {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 800px 100%;
+        animation: shimmer 1.4s ease-in-out infinite;
+        border-radius: 8px;
+    }
+
+    .skeleton-line {
+        height: 12px;
+        border-radius: 6px;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 800px 100%;
+        animation: shimmer 1.4s ease-in-out infinite;
+    }
+
+    .project-card.skeleton {
+        pointer-events: none;
+        opacity: 0.75;
+
+        .preview.skeleton-box {
+            height: 180px;
+            width: 100%;
+        }
+    }
+
+    /* ── Empty state ── */
+    .projects-empty {
+        @apply col-span-full flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-zinc-200 bg-zinc-50 py-16 text-center;
+
+        .empty-icon {
+            @apply text-zinc-300;
+        }
+
+        p {
+            @apply text-sm text-zinc-400 max-w-xs;
+        }
+    }
 }
