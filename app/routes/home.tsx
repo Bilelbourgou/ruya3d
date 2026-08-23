@@ -99,7 +99,10 @@ export default function Home() {
           render, and ship architectural projects faster than ever ever.{" "}
         </p>
         <div className="actions">
-          <a href="#upload" className="cta flex items-center gap-2">
+          <a
+            href="#upload"
+            className="cta flex items-center gap-2 hover:bg-[#3939BF] transition-colors"
+          >
             Start Building <ArrowRight />
           </a>
           <Button variant="outline" size="lg" className="demo">
@@ -111,8 +114,8 @@ export default function Home() {
           <div className="grid-overlay" />
           <div className="upload-card">
             <div className="upload-head">
-              <div className="upload-icon">
-                <Layers className="icon" />
+              <div className="upload-icon bg-primary">
+                <Layers className="icon bg-primary text-white" />
               </div>
               <h3>Upload your floor plan</h3>
               <p>Supports JPG, PNG, PDF, formats up to 10MB</p>
@@ -140,7 +143,10 @@ export default function Home() {
                   <div className="preview skeleton-box" />
                   <div className="card-body">
                     <div style={{ flex: 1 }}>
-                      <div className="skeleton-line" style={{ width: "60%", marginBottom: 8 }} />
+                      <div
+                        className="skeleton-line"
+                        style={{ width: "60%", marginBottom: 8 }}
+                      />
                       <div className="skeleton-line" style={{ width: "40%" }} />
                     </div>
                   </div>
@@ -149,7 +155,11 @@ export default function Home() {
             ) : projects.length === 0 ? (
               <div className="projects-empty">
                 <Layers size={32} className="empty-icon" />
-                <p>{isSignedIn ? "No projects yet — upload a floor plan to get started." : "Sign in to view your projects."}</p>
+                <p>
+                  {isSignedIn
+                    ? "No projects yet — upload a floor plan to get started."
+                    : "Sign in to view your projects."}
+                </p>
               </div>
             ) : (
               projects.map((project) => {
