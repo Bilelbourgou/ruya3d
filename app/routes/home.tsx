@@ -3,11 +3,11 @@ import Navbar from "../../components/Navbar";
 import { ArrowRight, Layers, Clock, ArrowUpRight } from "lucide-react";
 import Button from "../../components/ui/Button";
 import Upload from "../../components/Upload";
-import { useNavigate } from "react-router";
-import { useState } from 'react';
-import { createProject } from "../../lib/puter.actions";
+import { useNavigate, useOutletContext } from "react-router";
+import { useState, useRef, useEffect } from "react";
+import { createProject, getProjects } from "../../lib/puter.actions";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
     { name: "description", content: "Welcome to React Router!" },
@@ -15,44 +15,74 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export default function Home() {
-
   const navigate = useNavigate();
+  const { isSignedIn } = useOutletContext<AuthContext>();
   const [projects, setProjects] = useState<DesignItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const isCreatingProjectRef = useRef(false);
+
+  useEffect(() => {
+    if (!isSignedIn) return;
+    let cancelled = false;
+    const fetchProjects = async () => {
+      setIsLoading(true);
+      try {
+        const fetched = await getProjects();
+        if (!cancelled) {
+          setProjects(fetched ?? []);
+        }
+      } catch (e) {
+        console.error("Failed to load projects:", e);
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    fetchProjects();
+    return () => { cancelled = true; };
+  }, [isSignedIn]);
 
   const handleUploadComplete = async (base64Image: string) => {
-    const newId = Date.now().toString();
-    const name = `Residence ${newId}`;
+    try {
+      if (isCreatingProjectRef.current) return false;
+      isCreatingProjectRef.current = true;
+      const newId = Date.now().toString();
+      const name = `Residence ${newId}`;
 
-    const newItem = {
-      id: newId,
-      name,
-      sourceImage: base64Image,
-      renderedImage: undefined,
-      timestamp: Date.now()
-    }
+      const newItem = {
+        id: newId,
+        name,
+        sourceImage: base64Image,
+        renderedImage: undefined,
+        timestamp: Date.now(),
+      };
 
-    const saved = await createProject({ item: newItem, visibility: 'private' })
+      const saved = await createProject({
+        item: newItem,
+        visibility: "private",
+      });
 
-    if (!saved) {
-      console.error('Failed to save project');
-      return false;
-    }
-
-    setProjects((prev) => [saved,...prev]);
-    
-    navigate(`/visualizer/${newId}`, {
-      state: {
-        initialImage: newItem.sourceImage,
-        initialRendered: saved.renderedImage || null,
-        name
+      if (!saved) {
+        console.error("Failed to save project");
+        return false;
       }
-    });
 
-    return true;
-  }
+      setProjects((prev) => [saved, ...prev]);
+
+      navigate(`/visualizer/${newId}`, {
+        state: {
+          initialImage: newItem.sourceImage,
+          initialRendered: saved.renderedImage || null,
+          name,
+        },
+      });
+
+      return true;
+    } finally {
+      isCreatingProjectRef.current = false;
+    }
+  };
 
   return (
-
     <div className="home">
       <Navbar />
       <section className="hero">
@@ -63,9 +93,15 @@ export default function Home() {
           <p>Introducing Ruya3D 2.0</p>
         </div>
         <h1>Build beautifull spaces at speed of thought with Ruya3D</h1>
-        <p className="subtitle"> Ruya3D is a AI-first design environment that helps you visualize, render, and ship architectural projects faster than ever ever. </p>
+        <p className="subtitle">
+          {" "}
+          Ruya3D is a AI-first design environment that helps you visualize,
+          render, and ship architectural projects faster than ever ever.{" "}
+        </p>
         <div className="actions">
-          <a href="#upload" className="cta flex items-center gap-2">Start Building <ArrowRight /></a>
+          <a href="#upload" className="cta flex items-center gap-2">
+            Start Building <ArrowRight />
+          </a>
           <Button variant="outline" size="lg" className="demo">
             Watch Demo
           </Button>
@@ -92,24 +128,53 @@ export default function Home() {
           <div className="section-head">
             <div className="copy">
               <h2>Projects</h2>
-              <p>Your latest work and shared community projects, all in place.</p>
+              <p>
+                Your latest work and shared community projects, all in place.
+              </p>
             </div>
           </div>
           <div className="projects-grid">
-            {
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="project-card skeleton">
+                  <div className="preview skeleton-box" />
+                  <div className="card-body">
+                    <div style={{ flex: 1 }}>
+                      <div className="skeleton-line" style={{ width: "60%", marginBottom: 8 }} />
+                      <div className="skeleton-line" style={{ width: "40%" }} />
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : projects.length === 0 ? (
+              <div className="projects-empty">
+                <Layers size={32} className="empty-icon" />
+                <p>{isSignedIn ? "No projects yet — upload a floor plan to get started." : "Sign in to view your projects."}</p>
+              </div>
+            ) : (
               projects.map((project) => {
-                const { id, name, sourceImage, renderedImage, timestamp, isPublic, sharedBy } = project;
+                const {
+                  id,
+                  name,
+                  sourceImage,
+                  renderedImage,
+                  timestamp,
+                  isPublic,
+                  sharedBy,
+                } = project;
                 return (
                   <div
                     key={id}
                     className="project-card group cursor-pointer"
-                    onClick={() => navigate(`/visualizer/${id}`, {
-                      state: {
-                        initialImage: sourceImage,
-                        initialRendered: renderedImage || null,
-                        name
-                      }
-                    })}
+                    onClick={() =>
+                      navigate(`/visualizer/${id}`, {
+                        state: {
+                          initialImage: sourceImage,
+                          initialRendered: renderedImage || null,
+                          name,
+                        },
+                      })
+                    }
                   >
                     <div className="preview">
                       <img
@@ -117,7 +182,7 @@ export default function Home() {
                         alt={name || "Project preview"}
                       />
                       <div className="badge">
-                        <span>{isPublic ? 'Community' : 'Private'}</span>
+                        <span>{isPublic ? "Community" : "Private"}</span>
                       </div>
                     </div>
                     <div className="card-body">
@@ -125,8 +190,12 @@ export default function Home() {
                         <h3>{name || "Untitled Project"}</h3>
                         <div className="meta">
                           <Clock size={12} />
-                          <span>{timestamp ? new Date(timestamp).toLocaleDateString() : 'Recent'}</span>
-                          <span>{sharedBy ? `By ${sharedBy}` : 'By You'}</span>
+                          <span>
+                            {timestamp
+                              ? new Date(timestamp).toLocaleDateString()
+                              : "Recent"}
+                          </span>
+                          <span>{sharedBy ? `By ${sharedBy}` : "By You"}</span>
                         </div>
                       </div>
                       <div className="arrow">
@@ -136,11 +205,10 @@ export default function Home() {
                   </div>
                 );
               })
-            }
+            )}
           </div>
         </div>
       </section>
-
     </div>
-  )
+  );
 }
