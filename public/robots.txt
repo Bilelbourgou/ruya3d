@@ -1,0 +1,12 @@
+# Robots.txt for Ruya3D
+User-agent: *
+Allow: /
+Allow: /product
+Allow: /pricing
+Allow: /community
+Allow: /enterprise
+
+Disallow: /api/
+Disallow: /build/
+
+Sitemap: https://ruya3d.com/sitemap.xml

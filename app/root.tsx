@@ -16,6 +16,10 @@ import {
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
+  { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+  { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+  { rel: "apple-touch-icon", href: "/favicon.svg" },
+  { rel: "manifest", href: "/site.webmanifest" },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -28,21 +32,57 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-const DEFAULT_AUTH_STATE:AuthState = {
+const DEFAULT_AUTH_STATE: AuthState = {
   isSignedIn: false,
   username: null,
   userId: null,
-}
-    
+};
+
+const JSON_LD_SCHEMA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Ruya3D",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web",
+      "description": "AI-first spatial design environment converting 2D floor plans into photorealistic 3D architectural renders in seconds.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "Organization",
+      "name": "Ruya3D",
+      "url": "https://ruya3d.com",
+      "logo": "https://ruya3d.com/favicon.svg",
+      "sameAs": [
+        "https://twitter.com",
+        "https://github.com",
+        "https://discord.com"
+      ]
+    }
+  ]
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <meta name="theme-color" content="#4d4dff" />
+        <meta name="color-scheme" content="light" />
+        <meta name="author" content="Ruya3D" />
+        <meta name="robots" content="index, follow" />
         <Meta />
         <Links />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD_SCHEMA) }}
+        />
       </head>
       <body>
         {children}

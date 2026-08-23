@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
 import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 import { ArrowRight, Layers, Clock, ArrowUpRight } from "lucide-react";
 import Button from "../../components/ui/Button";
 import Upload from "../../components/Upload";
@@ -9,8 +10,22 @@ import { createProject, getProjects } from "../../lib/puter.actions";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Ruya3D — AI-First 3D Architectural Visualizer & Floor Plan Renderer" },
+    { name: "description", content: "Transform 2D floor plans and architectural blueprints into photorealistic, top-down 3D raytraced renders in seconds with Ruya3D spatial AI." },
+    { name: "keywords", content: "architectural visualization, 2D to 3D floor plan, AI rendering, raytracing, BIM, architecture software, interior design visualizer, Puter cloud" },
+    // Open Graph
+    { property: "og:title", content: "Ruya3D — AI-First 3D Architectural Visualizer & Floor Plan Renderer" },
+    { property: "og:description", content: "Transform 2D floor plans into photorealistic 3D architectural renders in seconds with Ruya3D spatial AI." },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: "https://ruya3d.com" },
+    { property: "og:image", content: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80" },
+    { property: "og:site_name", content: "Ruya3D" },
+    // Twitter Card
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:site", content: "@ruya3d" },
+    { name: "twitter:title", content: "Ruya3D — AI-First 3D Architectural Visualizer" },
+    { name: "twitter:description", content: "Transform 2D floor plans into photorealistic 3D architectural renders at the speed of thought." },
+    { name: "twitter:image", content: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80" },
   ];
 }
 
@@ -219,6 +234,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }
