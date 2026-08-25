@@ -6,6 +6,14 @@ import Button from "../../components/ui/Button";
 import { createProject, getProjectById } from "lib/puter.actions";
 import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider';
 
+export function meta() {
+  return [
+    { title: "3D Workspace & Visualizer — Ruya3D" },
+    { name: "description", content: "Interactive 3D top-down raytracing viewport, before/after floor plan slider, and high-resolution export in Ruya3D." },
+    { name: "robots", content: "noindex, follow" }
+  ];
+}
+
 const VisualizerId = () => {
   const { id } = useParams();
   const navigate = useNavigate();

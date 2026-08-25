@@ -1,0 +1,22 @@
+{
+  "name": "Ruya3D — AI 3D Architectural Visualizer",
+  "short_name": "Ruya3D",
+  "description": "AI-first spatial environment converting 2D floor plans into photorealistic 3D architectural renders in seconds.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fdfbf7",
+  "theme_color": "#4d4dff",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48 32x32 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

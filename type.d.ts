@@ -1,6 +1,7 @@
 interface AuthState {
     isSignedIn: boolean;
-    userName: string | null;
+    userName?: string | null;
+    username?: string | null;
     userId: string | null;
 }
 
@@ -87,12 +88,15 @@ interface CardProps {
 
 type AuthContext = {
     isSignedIn: boolean;
-    userName: string | null;
+    userName?: string | null;
+    username?: string | null;
     userId: string | null;
     refreshAuth: () => Promise<boolean>;
     signIn: () => Promise<boolean>;
     signOut: () => Promise<boolean>;
 };
+
+type AuthContextType = AuthContext;
 
 type AuthRequiredModalProps = {
     isOpen: boolean;
